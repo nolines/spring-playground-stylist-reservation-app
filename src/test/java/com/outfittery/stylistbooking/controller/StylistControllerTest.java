@@ -1,6 +1,7 @@
 package com.outfittery.stylistbooking.controller;
 
 import com.outfittery.stylistbooking.controller.dto.StylistDto;
+import com.outfittery.stylistbooking.exception.InvalidTimeException;
 import com.outfittery.stylistbooking.model.StylistState;
 import com.outfittery.stylistbooking.service.StylistService;
 import org.junit.Before;
@@ -8,6 +9,9 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -22,7 +26,7 @@ public class StylistControllerTest {
   }
 
   @Test
-  public void shouldCreateStylist() {
+  public void shouldCreateStylist() throws Exception {
     underTest.create(createStylistDto());
 
     Mockito.verify(stylistServiceMock, Mockito.times(1)).addNewStylist(createStylistDto());
@@ -48,9 +52,6 @@ public class StylistControllerTest {
 
     Mockito.verify(stylistServiceMock, Mockito.times(1)).deleteStylist("anyId");
   }
-
-  @Test
-  public void update() {}
 
   private StylistDto createStylistDto() {
     StylistDto stylistDto = new StylistDto();

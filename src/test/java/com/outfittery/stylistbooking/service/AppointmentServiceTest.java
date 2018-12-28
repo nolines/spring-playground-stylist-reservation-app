@@ -17,7 +17,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -42,6 +44,9 @@ public class AppointmentServiceTest {
 
   @Test
   public void shouldCreateAppointment() throws Exception {
+    List<Integer> integers = Arrays.asList(900,930,1000,1030,1100,1130,1200,1230,1300,1330,1400,1430,1500,1530,1600);
+    ReflectionTestUtils.setField(underTest, "timeSlotFormats", integers);
+
     when(customerRepositoryMock.findById(any())).thenReturn(createCustomerEntity());
     when(timeSlotRepositoryMock.findTimeSlotByTimeGreaterThanEqual(1400))
         .thenReturn(Collections.singletonList(new TimeSlot(1400, createStyleEntity(), null)));
@@ -59,6 +64,9 @@ public class AppointmentServiceTest {
 
   @Test(expected = TimeSlotNotFoundException.class)
   public void shouldThrowExceptionWhenCreateAppointment() throws Exception {
+    List<Integer> integers = Arrays.asList(900,930,1000,1030,1100,1130,1200,1230,1300,1330,1400,1430,1500,1530,1600);
+    ReflectionTestUtils.setField(underTest, "timeSlotFormats", integers);
+
     when(customerRepositoryMock.findById(any())).thenReturn(createCustomerEntity());
     when(timeSlotRepositoryMock.findTimeSlotByTimeGreaterThanEqual(any())).thenReturn(null);
 

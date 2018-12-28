@@ -2,6 +2,7 @@ package com.outfittery.stylistbooking.service;
 
 import com.outfittery.stylistbooking.controller.dto.StylistDto;
 import com.outfittery.stylistbooking.controller.resource.StylistResource;
+import com.outfittery.stylistbooking.exception.InvalidTimeException;
 import com.outfittery.stylistbooking.exception.StylistNotFoundException;
 import com.outfittery.stylistbooking.model.Stylist;
 import com.outfittery.stylistbooking.model.StylistState;
@@ -13,7 +14,10 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +38,11 @@ public class StylistServiceTest {
   }
 
   @Test
-  public void shouldAddNewStylist() {
+  public void shouldAddNewStylist() throws Exception {
+
+    List<Integer> integers = Arrays.asList(900,930,1000,1030,1100,1130,1200,1230,1300,1330,1400,1430,1500,1530,1600);
+
+    ReflectionTestUtils.setField(underTest, "timeSlotFormats", integers);
     Stylist stylist = createStylistEntity();
 
     when(stylistRepositoryMock.save(any())).thenReturn(stylist);

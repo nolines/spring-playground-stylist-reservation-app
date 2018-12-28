@@ -2,6 +2,7 @@ package com.outfittery.stylistbooking.controller;
 
 import com.outfittery.stylistbooking.controller.dto.StylistDto;
 import com.outfittery.stylistbooking.controller.resource.StylistResource;
+import com.outfittery.stylistbooking.exception.InvalidTimeException;
 import com.outfittery.stylistbooking.model.Stylist;
 import com.outfittery.stylistbooking.service.StylistService;
 import io.swagger.annotations.Api;
@@ -39,7 +40,7 @@ public class StylistController {
     consumes = APPLICATION_JSON_VALUE
   )
   @ResponseStatus(HttpStatus.CREATED)
-  public ResponseEntity<StylistResource> create(@RequestBody @Valid final StylistDto stylistDto) {
+  public ResponseEntity<StylistResource> create(@RequestBody @Valid final StylistDto stylistDto) throws Exception {
 
     log.info("Stylist creation request received!");
     return ResponseEntity.status(HttpStatus.CREATED).body(stylistService.addNewStylist(stylistDto));
