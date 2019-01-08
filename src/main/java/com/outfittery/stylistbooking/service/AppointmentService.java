@@ -111,6 +111,7 @@ public class AppointmentService {
         .filter((appointment -> reservedTimeSlots.add(appointment.getTimeSlot())))
         .collect(Collectors.toList());
 
+    // Need to reduce complexity
     for (int i = 0; i < reservedTimeSlots.size(); i++) {
       for (int j = 0; j < timeSlots.size(); j++) {
         if (reservedTimeSlots.get(i).getId().equals(timeSlots.get(j).getId())) {
