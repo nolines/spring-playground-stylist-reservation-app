@@ -4,6 +4,7 @@ import com.outfittery.stylistbooking.controller.dto.AppointmentDto;
 import com.outfittery.stylistbooking.controller.resource.AppointmentResource;
 import com.outfittery.stylistbooking.exception.CustomerNotfoundException;
 import com.outfittery.stylistbooking.model.Appointment;
+import com.outfittery.stylistbooking.model.TimeSlot;
 import com.outfittery.stylistbooking.service.AppointmentService;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping(value = "/api/v1/appointments")
-@Api(value="users", description="Endpoint for user management")
+@Api
 public class AppointmentController {
 
   @Autowired private AppointmentService appointmentService;
@@ -47,11 +48,21 @@ public class AppointmentController {
     return ResponseEntity.status(HttpStatus.OK).body(appointmentService.getAll());
   }
 
-  @GetMapping("/{name}")
+  @GetMapping("/availability")
   @ResponseStatus(HttpStatus.OK)
-  public ResponseEntity<AppointmentResource> getAppointmentForCustomer(@PathVariable String name) throws CustomerNotfoundException {
+  public ResponseEntity<List<TimeSlot>> getAvailableTimeSlots() {
 
-    log.info("Appointment get request received for customer" + name);
-    return ResponseEntity.status(HttpStatus.OK).body(appointmentService.getAppointmentByCustomer(name));
+    log.info("Appointment availability get request received!");
+    return ResponseEntity.status(HttpStatus.OK).body(appointmentService.getAvailableTimeSlots());
+  }
+
+  @GetMapping("/{customerId}")
+  @ResponseStatus(HttpStatus.OK)
+  public ResponseEntity<AppointmentResource> getAppointmentForCustomer(
+      @PathVariable String customerId) throws CustomerNotfoundException {
+
+    log.info("Appointment get request received for customer" + customerId);
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(appointmentService.getAppointmentByCustomer(customerId));
   }
 }

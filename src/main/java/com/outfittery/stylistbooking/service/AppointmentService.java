@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -55,7 +56,7 @@ public class AppointmentService {
     Customer customer =
         customerRepository
             .findById(appointmentDto.getCustomerId())
-            .orElseThrow(() -> new Exception(""));
+            .orElseThrow(() -> new CustomerNotfoundException("Customer cannot be found!"));
 
     List<TimeSlot> timeSlots =
         timeSlotRepository.findTimeSlotByTimeGreaterThanEqual(appointmentDto.getTime());
@@ -87,16 +88,38 @@ public class AppointmentService {
     return new ArrayList<>(appointmentRepository.findAll());
   }
 
-  public AppointmentResource getAppointmentByCustomer(String name)
+  public AppointmentResource getAppointmentByCustomer(String customerId)
       throws CustomerNotfoundException {
 
-    Appointment appointment = appointmentRepository.findAppointmentByCustomerId(name);
+    Appointment appointment = appointmentRepository.findAppointmentByCustomerId(customerId);
 
     if (null == appointment) {
-      throw new CustomerNotfoundException("No appointment found for customer " + name);
+      throw new CustomerNotfoundException("No appointment found for customer " + customerId);
     }
 
     return convertEntityToResource(appointment);
+  }
+
+  public List<TimeSlot> getAvailableTimeSlots() {
+
+    List<TimeSlot> timeSlots = timeSlotRepository.findAll();
+    List<Appointment> appointments = appointmentRepository.findAll();
+    List<TimeSlot> reservedTimeSlots = new ArrayList<>();
+
+    appointments
+        .stream()
+        .filter((appointment -> reservedTimeSlots.add(appointment.getTimeSlot())))
+        .collect(Collectors.toList());
+
+    for (int i = 0; i < reservedTimeSlots.size(); i++) {
+      for (int j = 0; j < timeSlots.size(); j++) {
+        if (reservedTimeSlots.get(i).getId().equals(timeSlots.get(j).getId())) {
+          timeSlots.remove(j);
+        }
+      }
+    }
+
+    return timeSlots;
   }
 
   private AppointmentResource convertEntityToResource(Appointment appointment) {
@@ -115,7 +138,7 @@ public class AppointmentService {
 
       if (!match) {
         throw new InvalidTimeException(
-                "Time should be formatted like 9AM:900,9:30AM:930,10AM:1000,14PM:1400");
+            "Time should be formatted like 9AM:900,9:30AM:930,10AM:1000,14PM:1400");
       }
     }
   }

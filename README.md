@@ -22,3 +22,13 @@ http://localhost:8080/swagger-ui.html#/
 <li> More proper input type for times. This need to be replaced with LocalDateTime and timeslots for 30 minutes</li>
 <li> Stylist update not available should be added</li>
 </ul>
+
+
+
+WHAT IS FIXED?
+
+Spring-jpa issues fixed. getAllAppointments fixed.
+available time-slots api added. (need to refactor)
+exception handler added
+getAppointmentByCustomer fixed.
+some uniqueness check added to customer.
